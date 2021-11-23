@@ -8,19 +8,25 @@ const {
 	addGithubIssueToBody,
 } = require('../github-jira-mapping/github-jira-mapping');
 
-const issueCreatedHandler = {
+const issueEditedHandler = {
 	canHandleEvent(name, payload) {
-		return name === 'issues' && payload.action === 'opened';
+		return name === 'issues' && payload.action === 'edited';
 	},
 
-	handleEvent({issue}) {
+	async handleEvent({issue}) {
 		const jiraClient = new JiraClient();
 
-		return jiraClient.createIssue({
+		const jiraIssue = await jiraClient.searchIssueWithGithubIssueId({
+			githubIssueId: issue.html_url,
+		});
+
+		const options = {
 			description: addGithubIssueToBody(issue.html_url, issue.body),
 			title: issue.title,
-		});
+		};
+
+		return jiraClient.updateIssue({issueId: jiraIssue.key, ...options});
 	},
 };
 
-module.exports = issueCreatedHandler;
+module.exports = issueEditedHandler;
