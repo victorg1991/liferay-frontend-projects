@@ -24,7 +24,8 @@ module.exports = async function isValidMilestone(milestoneId) {
 		if (issue?.fields?.issuetype?.name === 'Epic') {
 			return true;
 		}
-	} catch (error) {
+	}
+	catch (error) {
 		return false;
 	}
 
