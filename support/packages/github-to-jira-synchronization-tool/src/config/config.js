@@ -32,7 +32,8 @@ function loadConfig() {
 		config = JSON.parse(fs.readFileSync(CONFIGURATION_PATH, 'utf-8'));
 
 		return config;
-	} catch (error) {
+	}
+	catch (error) {
 		if (config) {
 			console.error('new config file is wrong, reusing past config');
 
